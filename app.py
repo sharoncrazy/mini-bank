@@ -1,14 +1,18 @@
 from flask import Flask,render_template,request,flash,redirect,url_for,session
 from db import db
 from models import users
+from dotenv import load_dotenv
+import os
 
 
+load_dotenv()
 
 
 #CONFIG
 app = Flask(__name__)
-app.secret_key = 'mini-bank-secret-key-2025-do-not-share'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://bankuser:bankpass@localhost:5432/mini-bank'
+app.secret_key = os.getenv('SECRET_KEY')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db.init_app(app)
 
@@ -126,6 +130,5 @@ def transfer():
 
 if __name__ == "__main__":
     with app.app_context():
-        db.drop_all()
         db.create_all()
     app.run(debug=True)
